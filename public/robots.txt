@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://smartvisitingcard.vercel.app/sitemap.xml

@@ -1,0 +1,17 @@
+{
+  "name": "SmartVisitingCard - Digital Business Cards",
+  "short_name": "SmartCard",
+  "description": "Create and share beautiful digital business cards",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
