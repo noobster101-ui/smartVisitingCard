@@ -43,7 +43,7 @@ function CopyButton({ text, label, isDark }: { text: string; label: string; isDa
   return (
     <button
       onClick={handleCopy}
-      className={`shrink-0 h-7 w-7 rounded-lg flex items-center justify-center transition-all duration-200 active:scale-90 ${
+      className={`shrink-0 h-7 w-7 rounded-lg flex items-center justify-center transition-all duration-200 active:scale-90 cursor-pointer ${
         isDark ? "hover:bg-white/10 text-white/40 hover:text-white/70" : "hover:bg-black/5 text-gray-400 hover:text-gray-600"
       }`}
       aria-label={`Copy ${label}`}
@@ -751,7 +751,7 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
           <p className="text-center text-[11px] py-4" style={{ color: txtGho }}>
             Powered by{" "}
             <span className="font-semibold" style={{ color: `${pc}80` }}>
-              SmartVisitingCard
+              Smart Visiting Card
             </span>
           </p>
         </AnimatedSection>
@@ -759,9 +759,9 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
 
       {/* ── Lightbox ── */}
       {lightboxOpen && hasGallery && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" onClick={() => setLightboxOpen(false)}>
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 cursor-pointer" onClick={() => setLightboxOpen(false)}>
           <button
-            className="absolute top-5 right-5 h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+            className="absolute top-5 right-5 h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10 cursor-pointer"
             onClick={() => setLightboxOpen(false)}
           >
             <X className="h-5 w-5" />
@@ -769,7 +769,7 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
           {card.gallery!.length > 1 && (
             <>
               <button
-                className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+                className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   setLightboxIndex((i) => (i - 1 + card.gallery!.length) % card.gallery!.length);
@@ -778,7 +778,7 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
                 <ChevronLeft className="h-6 w-6" />
               </button>
               <button
-                className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+                className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   setLightboxIndex((i) => (i + 1) % card.gallery!.length);

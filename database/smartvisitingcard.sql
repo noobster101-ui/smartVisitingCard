@@ -58,6 +58,17 @@ CREATE TABLE cards (
   CONSTRAINT fk_cards_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE settings (
+  `key`   VARCHAR(100) NOT NULL,
+  `value` VARCHAR(10)  NOT NULL DEFAULT 'true',
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB;
+
+INSERT INTO settings (`key`, `value`) VALUES
+  ('gallery_enabled', 'true'),
+  ('visiting_card_enabled', 'true')
+ON DUPLICATE KEY UPDATE value = VALUES(value);
+
 INSERT INTO users (id, name, email, password, role, created_at, updated_at) VALUES
   ('a0000000-0000-0000-0000-000000000001', 'Admin', 'admin@smartcard.com', 'h_g10hvh_YWRtaW4xMjM=', 'admin', NOW(), NOW()),
   ('b0000000-0000-0000-0000-000000000001', 'Rakesh Kumar', 'rakesh@example.com', 'h_ducpec_cmFrZXNoMTIz', 'user', NOW(), NOW());

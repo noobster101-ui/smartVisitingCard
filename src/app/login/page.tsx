@@ -1,32 +1,26 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
-import { toast } from "sonner"
-import { Loader2, Eye, EyeOff } from "lucide-react"
-import { loginSchema, type LoginFormData } from "@/lib/validations"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { Loader2, Eye, EyeOff } from "lucide-react";
+import { loginSchema, type LoginFormData } from "@/lib/validations";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    fetch("/api/init").catch(() => {})
-  }, [])
+    fetch("/api/init").catch(() => {});
+  }, []);
 
   const {
     register,
@@ -34,7 +28,7 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   async function onSubmit(data: LoginFormData) {
     try {
@@ -42,17 +36,17 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: data.email, password: data.password }),
-      })
+      });
 
       if (!res.ok) {
-        const error = await res.json()
-        toast.error(error.error || "Login failed")
-        return
+        const error = await res.json();
+        toast.error(error.error || "Login failed");
+        return;
       }
 
-      router.push("/dashboard")
+      router.push("/dashboard");
     } catch {
-      toast.error("An unexpected error occurred")
+      toast.error("An unexpected error occurred");
     }
   }
 
@@ -69,34 +63,17 @@ export default function LoginPage() {
       >
         <Card className="glass border-0 shadow-2xl">
           <CardHeader className="text-center">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              <CardTitle className="text-3xl font-bold tracking-tight">
-                SmartVisitingCard
-              </CardTitle>
-              <CardDescription className="mt-2 text-base">
-                Sign in to your account
-              </CardDescription>
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2, duration: 0.5 }}>
+              <CardTitle className="text-3xl font-bold tracking-tight">Smart Visiting Card</CardTitle>
+              <CardDescription className="mt-2 text-base">Sign in to your account</CardDescription>
             </motion.div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="text-sm text-destructive">
-                    {errors.email.message}
-                  </p>
-                )}
+                <Input id="email" type="email" placeholder="Enter your email" {...register("email")} />
+                {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -115,25 +92,16 @@ export default function LoginPage() {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive">
-                    {errors.password.message}
-                  </p>
-                )}
+                {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                size="lg"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -154,14 +122,12 @@ export default function LoginPage() {
 
             <div className="mt-4">
               <Button variant="outline" className="w-full" asChild>
-                <Link href="/register">
-                  Create a New Account
-                </Link>
+                <Link href="/register">Create a New Account</Link>
               </Button>
             </div>
           </CardContent>
         </Card>
       </motion.div>
     </div>
-  )
+  );
 }

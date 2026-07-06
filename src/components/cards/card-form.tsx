@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -537,6 +537,15 @@ export default function CardForm({ mode, initialData, slug }: CardFormProps) {
   const [saving, setSaving] = useState(false)
   const [device, setDevice] = useState<DevicePreview>("desktop")
   const [tab, setTab] = useState("general")
+  const [galleryEnabled, setGalleryEnabled] = useState(true)
+  const [visitingCardEnabled, setVisitingCardEnabled] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/settings/public").then(r => r.json()).then(data => {
+      if (data.gallery_enabled !== undefined) setGalleryEnabled(data.gallery_enabled === "true")
+      if (data.visiting_card_enabled !== undefined) setVisitingCardEnabled(data.visiting_card_enabled === "true")
+    }).catch(() => {})
+  }, [])
 
   const {
     register,
@@ -638,8 +647,8 @@ export default function CardForm({ mode, initialData, slug }: CardFormProps) {
                 <TabsTrigger value="general" className="text-xs">General</TabsTrigger>
                 <TabsTrigger value="business" className="text-xs">Business</TabsTrigger>
                 <TabsTrigger value="images" className="text-xs">Images</TabsTrigger>
-                <TabsTrigger value="gallery" className="text-xs">Gallery</TabsTrigger>
-                <TabsTrigger value="visitingCard" className="text-xs">Visiting Card</TabsTrigger>
+                {galleryEnabled && <TabsTrigger value="gallery" className="text-xs">Gallery</TabsTrigger>}
+                {visitingCardEnabled && <TabsTrigger value="visitingCard" className="text-xs">Visiting Card</TabsTrigger>}
                 <TabsTrigger value="social" className="text-xs">Social</TabsTrigger>
                 <TabsTrigger value="appearance" className="text-xs">Appearance</TabsTrigger>
               </TabsList>
@@ -989,6 +998,7 @@ export default function CardForm({ mode, initialData, slug }: CardFormProps) {
                 </Card>
               </TabsContent>
 
+              {galleryEnabled && (
               <TabsContent value="gallery" className="space-y-4">
                 <Card>
                   <CardContent className="p-6">
@@ -1005,7 +1015,9 @@ export default function CardForm({ mode, initialData, slug }: CardFormProps) {
                   </CardContent>
                 </Card>
               </TabsContent>
+              )}
 
+              {visitingCardEnabled && (
               <TabsContent value="visitingCard" className="space-y-4">
                 <Card>
                   <CardContent className="p-6">
@@ -1025,6 +1037,7 @@ export default function CardForm({ mode, initialData, slug }: CardFormProps) {
                   </CardContent>
                 </Card>
               </TabsContent>
+              )}
 
               <TabsContent value="social" className="space-y-4">
                 <Card>
@@ -1130,7 +1143,7 @@ export default function CardForm({ mode, initialData, slug }: CardFormProps) {
                                     setValue("secondaryColor", colors.secondary)
                                   }
                                 }}
-                                className={`relative rounded-xl overflow-hidden border-2 transition-all duration-200 text-left group ${
+                                className={`relative rounded-xl overflow-hidden border-2 transition-all duration-200 text-left group cursor-pointer ${
                                   field.value === t.value
                                     ? "border-primary shadow-md ring-2 ring-primary/20 scale-[1.02]"
                                     : "border-border hover:border-muted-foreground/30 hover:shadow-sm"

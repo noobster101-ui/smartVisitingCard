@@ -26,7 +26,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-sm bg-background/80 border-b">
         <Link href="/" className="text-xl font-bold tracking-tight">
-          SmartVisitingCard
+          Smart Visiting Card
         </Link>
         <nav className="flex items-center gap-3">
           <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
@@ -136,7 +136,7 @@ export default function Home() {
 
       <footer className="border-t py-6 px-6">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row max-w-5xl mx-auto">
-          <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} SmartVisitingCard. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Smart Visiting Card. All rights reserved.</p>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <Link href="#contact" className="hover:text-foreground transition-colors">
               Contact
