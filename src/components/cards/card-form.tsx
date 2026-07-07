@@ -1047,7 +1047,7 @@ export default function CardForm({ mode, initialData, slug }: CardFormProps) {
                         <Label htmlFor="whatsapp">WhatsApp</Label>
                         <Input
                           id="whatsapp"
-                          placeholder="https://wa.me/1234567890"
+                          placeholder="Phone number or wa.me link"
                           {...register("social.whatsapp")}
                         />
                       </div>

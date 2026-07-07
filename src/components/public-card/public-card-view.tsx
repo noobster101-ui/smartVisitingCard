@@ -67,6 +67,61 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
+function getWhatsAppUrl(value: string): string {
+  const trimmed = value.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("wa.me")) {
+    return trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+  }
+  const digits = trimmed.replace(/[^0-9]/g, "");
+  return `https://wa.me/${digits}`;
+}
+
+function ensureHttps(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
+  return `https://${trimmed}`;
+}
+
+const SOCIAL_URLS: Record<string, (v: string) => string> = {
+  whatsapp: getWhatsAppUrl,
+  linkedin: (v) => {
+    const url = ensureHttps(v);
+    if (url.includes("linkedin.com")) return url;
+    return `https://linkedin.com/in/${v.replace(/^@/, "")}`;
+  },
+  github: (v) => {
+    const url = ensureHttps(v);
+    if (url.includes("github.com")) return url;
+    return `https://github.com/${v.replace(/^@/, "")}`;
+  },
+  twitter: (v) => {
+    const url = ensureHttps(v);
+    if (url.includes("twitter.com") || url.includes("x.com")) return url;
+    return `https://x.com/${v.replace(/^@/, "")}`;
+  },
+  instagram: (v) => {
+    const url = ensureHttps(v);
+    if (url.includes("instagram.com")) return url;
+    return `https://instagram.com/${v.replace(/^@/, "")}`;
+  },
+  youtube: (v) => {
+    const url = ensureHttps(v);
+    if (url.includes("youtube.com") || url.includes("youtu.be")) return url;
+    return `https://youtube.com/@${v.replace(/^@/, "")}`;
+  },
+  facebook: (v) => {
+    const url = ensureHttps(v);
+    if (url.includes("facebook.com") || url.includes("fb.com")) return url;
+    return `https://facebook.com/${v.replace(/^@/, "")}`;
+  },
+};
+
+function getSocialUrl(platform: string, value: string): string {
+  const builder = SOCIAL_URLS[platform];
+  return builder ? builder(value) : ensureHttps(value);
+}
+
 function QuickActionButton({
   icon: Icon,
   label,
@@ -340,10 +395,10 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
             <div className="flex justify-around gap-2">
               {card.phone && <QuickActionButton icon={Phone} label="Call" href={`tel:${card.phone}`} color={pc} isDark={isDark} />}
               {card.social?.whatsapp && (
-                <QuickActionButton icon={WhatsAppIcon} label="WhatsApp" href={card.social.whatsapp} color="#25D366" isDark={isDark} />
+                <QuickActionButton icon={WhatsAppIcon} label="WhatsApp" href={getSocialUrl("whatsapp", card.social.whatsapp)} color="#25D366" isDark={isDark} />
               )}
               {card.email && <QuickActionButton icon={Mail} label="Email" href={`mailto:${card.email}`} color={pc} isDark={isDark} />}
-              {card.website && <QuickActionButton icon={Globe} label="Website" href={card.website} color={pc} isDark={isDark} />}
+              {card.website && <QuickActionButton icon={Globe} label="Website" href={ensureHttps(card.website)} color={pc} isDark={isDark} />}
               {card.address && (
                 <QuickActionButton
                   icon={MapPin}
@@ -681,17 +736,17 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
               </div>
               <div className="flex flex-wrap gap-2.5 justify-center">
                 {card.social?.whatsapp && (
-                  <SocialIcon platform="whatsapp" url={card.social.whatsapp} primaryColor="#25D366" isDark={isDark} />
+                  <SocialIcon platform="whatsapp" url={getSocialUrl("whatsapp", card.social.whatsapp)} primaryColor="#25D366" isDark={isDark} />
                 )}
-                {card.social?.linkedin && <SocialIcon platform="linkedin" url={card.social.linkedin} primaryColor={pc} isDark={isDark} />}
-                {card.social?.github && <SocialIcon platform="github" url={card.social.github} primaryColor={pc} isDark={isDark} />}
-                {card.social?.twitter && <SocialIcon platform="twitter" url={card.social.twitter} primaryColor="#000000" isDark={isDark} />}
+                {card.social?.linkedin && <SocialIcon platform="linkedin" url={getSocialUrl("linkedin", card.social.linkedin)} primaryColor={pc} isDark={isDark} />}
+                {card.social?.github && <SocialIcon platform="github" url={getSocialUrl("github", card.social.github)} primaryColor={pc} isDark={isDark} />}
+                {card.social?.twitter && <SocialIcon platform="twitter" url={getSocialUrl("twitter", card.social.twitter)} primaryColor="#000000" isDark={isDark} />}
                 {card.social?.instagram && (
-                  <SocialIcon platform="instagram" url={card.social.instagram} primaryColor="#E4405F" isDark={isDark} />
+                  <SocialIcon platform="instagram" url={getSocialUrl("instagram", card.social.instagram)} primaryColor="#E4405F" isDark={isDark} />
                 )}
-                {card.social?.youtube && <SocialIcon platform="youtube" url={card.social.youtube} primaryColor="#FF0000" isDark={isDark} />}
+                {card.social?.youtube && <SocialIcon platform="youtube" url={getSocialUrl("youtube", card.social.youtube)} primaryColor="#FF0000" isDark={isDark} />}
                 {card.social?.facebook && (
-                  <SocialIcon platform="facebook" url={card.social.facebook} primaryColor="#1877F2" isDark={isDark} />
+                  <SocialIcon platform="facebook" url={getSocialUrl("facebook", card.social.facebook)} primaryColor="#1877F2" isDark={isDark} />
                 )}
               </div>
             </div>
