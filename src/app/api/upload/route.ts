@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
-import { writeFile, mkdir } from "fs/promises"
-import path from "path"
+import { put } from "@vercel/blob"
+
+export const runtime = "nodejs"
 
 export async function POST(request: Request) {
   try {
@@ -12,27 +13,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 })
     }
 
-    const validTypes = ["profile", "logos", "gallery", "brochure", "visiting-card"]
+    const validTypes = ["profile", "logos", "gallery", "visiting-card"]
     if (!validTypes.includes(type)) {
       return NextResponse.json({ error: "Invalid upload type" }, { status: 400 })
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    const ext = file.name.split(".").pop() || "jpg"
+    const filename = `${type}/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`
 
-    const ext = path.extname(file.name) || ".jpg"
-    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}${ext}`
-    const dir = path.join(process.cwd(), "public", "uploads", type)
-    await mkdir(dir, { recursive: true })
-    await writeFile(path.join(dir, filename), buffer)
+    const blob = await put(filename, file, {
+      access: "public",
+      addRandomSuffix: false,
+    })
 
     return NextResponse.json({
-      url: `/uploads/${type}/${filename}`,
+      url: blob.url,
       name: file.name,
       type: file.type,
       size: file.size,
     })
-  } catch {
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 })
+  } catch (e: any) {
+    console.error("Upload error:", e?.message)
+    return NextResponse.json({ error: e?.message || "Upload failed" }, { status: 500 })
   }
 }

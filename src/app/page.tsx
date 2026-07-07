@@ -29,9 +29,9 @@ export default function Home() {
           Smart Visiting Card
         </Link>
         <nav className="flex items-center gap-3">
-          <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          {/* <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             Contact
-          </Link>
+          </Link> */}
           <Button asChild variant="ghost" size="sm">
             <Link href="/login">Sign In</Link>
           </Button>

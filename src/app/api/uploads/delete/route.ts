@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
-import { unlink } from "fs/promises"
-import path from "path"
+import { del } from "@vercel/blob"
+
+export const runtime = "nodejs"
 
 export async function POST(request: Request) {
   try {
@@ -9,15 +10,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "url is required" }, { status: 400 })
     }
 
-    const normalized = url.replace(/\\/g, "/")
-    if (!normalized.startsWith("/uploads/") || normalized.includes("..")) {
-      return NextResponse.json({ error: "Invalid file path" }, { status: 400 })
+    if (!url.includes("blob.vercel-storage.com")) {
+      return NextResponse.json({ error: "Invalid blob URL" }, { status: 400 })
     }
-    const filePath = path.join(process.cwd(), "public", normalized)
-    await unlink(filePath)
+
+    await del(url)
 
     return NextResponse.json({ success: true })
-  } catch {
-    return NextResponse.json({ error: "Failed to delete file" }, { status: 500 })
+  } catch (e: any) {
+    console.error("Delete error:", e?.message)
+    return NextResponse.json({ error: e?.message || "Failed" }, { status: 500 })
   }
 }
