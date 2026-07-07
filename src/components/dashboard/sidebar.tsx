@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import {
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   CreditCard as CardIcon,
+  KeyRound,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,7 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [user, setUser] = useState<SafeUser | null>(null)
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, adminOnly: false },
     { href: "/dashboard/cards", label: "Cards", icon: CreditCard, adminOnly: false },
     { href: "/dashboard/users", label: "Users", icon: Users, adminOnly: true },
+    { href: "/dashboard/reset-requests", label: "Reset Requests", icon: KeyRound, adminOnly: true },
     { href: "/dashboard/settings", label: "Settings", icon: Settings, adminOnly: false },
   ]
 
@@ -133,18 +136,19 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
             </div>
           </div>
         )}
-        <Link href="/api/auth/logout" className="block mt-2">
-          <Button
-            variant="ghost"
-            className={cn(
-              "w-full rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200",
-              collapsed && "justify-center px-2"
-            )}
-          >
-            <LogOut className="h-4 w-4 shrink-0" />
-            {!collapsed && <span className="ml-3">Logout</span>}
-          </Button>
-        </Link>
+        <button
+          onClick={async () => {
+            await fetch("/api/auth/logout", { method: "POST" })
+            router.push("/login")
+          }}
+          className={cn(
+            "w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer",
+            collapsed && "justify-center px-2"
+          )}
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          {!collapsed && <span className="ml-3">Logout</span>}
+        </button>
       </div>
     </aside>
   )

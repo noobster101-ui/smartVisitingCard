@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS password_reset_requests;
 DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS settings;
 DROP TABLE IF EXISTS users;
@@ -62,6 +63,19 @@ CREATE TABLE settings (
 INSERT IGNORE INTO settings (`key`, `value`) VALUES
   ('gallery_enabled', 'true'),
   ('visiting_card_enabled', 'true');
+
+CREATE TABLE password_reset_requests (
+  id         CHAR(36)     NOT NULL,
+  user_id    CHAR(36)     NOT NULL,
+  status     ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  new_password VARCHAR(255) DEFAULT NULL,
+  created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  INDEX idx_prr_user_id (user_id),
+  INDEX idx_prr_status (status),
+  CONSTRAINT fk_prr_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO users (id, name, email, password, role, created_at, updated_at) VALUES
   ('a0000000-0000-0000-0000-000000000001', 'Admin', 'admin@smartcard.com', 'h_g10hvh_YWRtaW4xMjM=', 'admin', NOW(), NOW()),

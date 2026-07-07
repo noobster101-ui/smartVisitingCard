@@ -3,8 +3,8 @@ import type { NextRequest } from "next/server"
 
 const SESSION_COOKIE = "svc_session"
 
-const PUBLIC_PATHS = ["/login", "/register", "/forgot-password"]
-const PUBLIC_API = ["/api/auth/login", "/api/auth/register", "/api/auth/forgot-password", "/api/init", "/api/settings/public"]
+const PUBLIC_PATHS = ["/login", "/register"]
+const PUBLIC_API = ["/api/auth/login", "/api/auth/register", "/api/init", "/api/settings/public"]
 const PUBLIC_PREFIXES = ["/card/", "/_next", "/favicon", "/uploads"]
 
 export function proxy(request: NextRequest) {

@@ -22,8 +22,10 @@ export function Navbar({ title, onToggleSidebar }: NavbarProps) {
   const { theme, setTheme } = useTheme()
   const pathname = usePathname()
   const [user, setUser] = useState<SafeUser | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     fetch("/api/auth/me").then(r => r.json()).then(setUser).catch(() => {})
   }, [])
 
@@ -71,7 +73,7 @@ export function Navbar({ title, onToggleSidebar }: NavbarProps) {
           size="icon"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="relative h-9 w-9 rounded-xl hover:bg-accent"
-          title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          title={mounted ? `Switch to ${theme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
         >
           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -102,7 +104,7 @@ export function Navbar({ title, onToggleSidebar }: NavbarProps) {
               <DropdownMenu.Separator className="h-px bg-border mx-1 my-1" />
               <DropdownMenu.Item
                 className="flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-destructive outline-none hover:bg-destructive/10 transition-colors"
-                onSelect={() => { window.location.href = "/api/auth/logout" }}
+                onSelect={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.href = "/login" }}
               >
                 <LogOut className="h-4 w-4" />
                 Logout
