@@ -1,44 +1,44 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState, useEffect } from "react"
-import {
-  CreditCard,
-  Activity,
-  ArrowRight,
-  Plus,
-  Eye,
-} from "lucide-react"
-import { formatDate, getInitials } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { CreditCard, Activity, ArrowRight, Plus, Eye } from "lucide-react";
+import { formatDate, getInitials } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface DashboardCard {
-  id: string
-  slug: string
-  name: string
-  designation: string
-  company: string
-  theme: string
-  updatedAt: string
+  id: string;
+  slug: string;
+  name: string;
+  designation: string;
+  company: string;
+  theme: string;
+  updatedAt: string;
 }
 
 export default function DashboardPage() {
-  const [cards, setCards] = useState<DashboardCard[]>([])
-  const [totalCards, setTotalCards] = useState(0)
-  const [userName, setUserName] = useState("User")
+  const [cards, setCards] = useState<DashboardCard[]>([]);
+  const [totalCards, setTotalCards] = useState(0);
+  const [userName, setUserName] = useState("User");
 
   useEffect(() => {
-    fetch("/api/auth/me").then(r => r.ok ? r.json() : null).then(u => {
-      if (u?.name) setUserName(u.name.split(" ")[0])
-    }).catch(() => {})
-    fetch("/api/cards").then(r => r.ok ? r.json() : []).then(data => {
-      const list = Array.isArray(data) ? data : []
-      setCards(list)
-      setTotalCards(list.length)
-    }).catch(() => {})
-  }, [])
+    fetch("/api/auth/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((u) => {
+        if (u?.name) setUserName(u.name.split(" ")[0]);
+      })
+      .catch(() => {});
+    fetch("/api/cards")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        const list = Array.isArray(data) ? data : [];
+        setCards(list);
+        setTotalCards(list.length);
+      })
+      .catch(() => {});
+  }, []);
 
-  const recentCards = cards.slice(0, 5)
+  const recentCards = cards.slice(0, 5);
 
   const stats = [
     {
@@ -62,7 +62,7 @@ export default function DashboardPage() {
       icon: Activity,
       color: "#8b5cf6",
     },
-  ]
+  ];
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -72,9 +72,7 @@ export default function DashboardPage() {
             Welcome back,
             <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent"> {userName}</span>
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Here&apos;s what&apos;s happening with your digital cards.
-          </p>
+          <p className="text-muted-foreground mt-1">Here&apos;s what&apos;s happening with your digital cards.</p>
         </div>
         <Link
           href="/dashboard/cards/new"
@@ -87,7 +85,7 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((stat) => {
-          const Icon = stat.icon
+          const Icon = stat.icon;
           return (
             <div key={stat.title} className="group animate-fade-in-up">
               <div className="rounded-2xl border bg-card overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
@@ -104,7 +102,7 @@ export default function DashboardPage() {
                 <div className="h-1 w-full" style={{ background: `linear-gradient(to right, ${stat.color}, ${stat.color}80)` }} />
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -114,13 +112,11 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold">Recent Cards</h2>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  Your most recently updated digital business cards.
-                </p>
+                <p className="text-sm text-muted-foreground mt-0.5">Your most recently updated digital business cards.</p>
               </div>
               <Link
                 href="/dashboard/cards"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors whitespace-nowrap"
               >
                 View all
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -128,7 +124,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="px-6 pb-6">
+          <div className="px-4 pb-6">
             {recentCards.length === 0 ? (
               <div className="text-center py-12">
                 <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
@@ -150,7 +146,7 @@ export default function DashboardPage() {
                   <Link
                     key={card.id}
                     href={`/dashboard/cards/${card.slug}/edit`}
-                    className="flex items-center justify-between p-3 rounded-xl hover:bg-accent/50 transition-all duration-200 group"
+                    className="flex items-center justify-between py-2 rounded-xl hover:bg-accent/50 transition-all duration-200 group"
                     style={{ animationDelay: `${i * 0.05}s` }}
                   >
                     <div className="flex items-center gap-3 min-w-0">
@@ -158,21 +154,17 @@ export default function DashboardPage() {
                         {getInitials(card.name)}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
-                          {card.name}
-                        </p>
+                        <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">{card.name}</p>
                         <p className="text-xs text-muted-foreground truncate">
                           {card.designation} · {card.company}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex items-center shrink-0">
                       <Badge variant="secondary" className="text-[10px] px-2 py-0.5 font-normal">
                         {card.theme}
                       </Badge>
-                      <span className="text-xs text-muted-foreground hidden sm:inline">
-                        {formatDate(card.updatedAt)}
-                      </span>
+                      <span className="text-xs text-muted-foreground hidden sm:inline">{formatDate(card.updatedAt)}</span>
                       <ArrowRight className="h-4 w-4 text-muted-foreground/0 group-hover:text-primary transition-all duration-200" />
                     </div>
                   </Link>
@@ -183,5 +175,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

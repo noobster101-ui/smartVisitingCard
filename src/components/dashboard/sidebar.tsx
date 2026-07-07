@@ -24,9 +24,10 @@ type SafeUser = Omit<User, "password">
 interface SidebarProps {
   collapsed: boolean
   onToggle: () => void
+  className?: string
 }
 
-export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export function Sidebar({ collapsed, onToggle, className }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<SafeUser | null>(null)
@@ -51,7 +52,8 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
     <aside
       className={cn(
         "fixed inset-y-0 left-0 z-50 flex flex-col bg-card border-r border-border/50 transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
+        collapsed ? "w-16" : "w-64",
+        className
       )}
     >
       <div className="flex h-16 items-center justify-between px-4">

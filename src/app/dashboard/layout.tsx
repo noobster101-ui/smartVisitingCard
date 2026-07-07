@@ -1,11 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { X } from "lucide-react"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { Navbar } from "@/components/dashboard/navbar"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 
 export default function DashboardLayout({
   children,
@@ -26,7 +24,7 @@ export default function DashboardLayout({
         <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
       </div>
 
-      <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />
+      <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} className="hidden lg:flex" />
 
       {mobileOpen && (
         <>
@@ -36,14 +34,6 @@ export default function DashboardLayout({
           />
           <div className="fixed inset-y-0 left-0 z-50 lg:hidden animate-slide-in-left">
             <Sidebar collapsed={false} onToggle={toggleMobile} />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="fixed top-3 left-[13.5rem] z-50 h-8 w-8 rounded-full bg-background shadow-md lg:hidden"
-              onClick={toggleMobile}
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </div>
         </>
       )}
