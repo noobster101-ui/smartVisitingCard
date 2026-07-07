@@ -54,7 +54,7 @@ export default function RegisterPage() {
         <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
       </div>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative  z-[99]">
         <div className="text-center mb-8">
           <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20 mx-auto mb-4">
             <UserPlus className="h-6 w-6 text-white" />

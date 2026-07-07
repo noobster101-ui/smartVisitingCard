@@ -12,3 +12,15 @@ const pool = mysql.createPool({
 })
 
 export default pool
+
+export async function testConnection() {
+  try {
+    const conn = await pool.getConnection()
+    console.log("DB connected:", process.env.DATABASE_HOST)
+    conn.release()
+    return true
+  } catch (e: any) {
+    console.error("DB connection failed:", e.message)
+    return false
+  }
+}

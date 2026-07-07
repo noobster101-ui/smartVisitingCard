@@ -18,7 +18,8 @@ export async function POST(request: Request) {
       success: true,
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
     })
-  } catch {
-    return NextResponse.json({ error: "Login failed" }, { status: 500 })
+  } catch (e: any) {
+    console.error("Login error:", e.message)
+    return NextResponse.json({ error: "Login failed: " + e.message }, { status: 500 })
   }
 }

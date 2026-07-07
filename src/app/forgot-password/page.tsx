@@ -1,82 +1,92 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { toast } from "sonner"
-import { Loader2, KeyRound, CheckCircle, ArrowLeft } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/lib/validations"
+import { useState } from "react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "sonner";
+import { Loader2, KeyRound, CheckCircle, ArrowLeft } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/lib/validations";
 
-const resetSchema = z.object({
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string().min(1, "Please confirm your password"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-})
+const resetSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export default function ForgotPasswordPage() {
-  const [saving, setSaving] = useState(false)
-  const [resetMode, setResetMode] = useState(false)
-  const [resetEmail, setResetEmail] = useState("")
+  const [saving, setSaving] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
 
-  const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
-  })
+  });
 
-  const { register: regReset, handleSubmit: handleSubmitReset, formState: { errors: resetErrors } } = useForm<{ password: string; confirmPassword: string }>({
+  const {
+    register: regReset,
+    handleSubmit: handleSubmitReset,
+    formState: { errors: resetErrors },
+  } = useForm<{ password: string; confirmPassword: string }>({
     resolver: zodResolver(resetSchema),
-  })
+  });
 
   const onEmailSubmit = async (data: ForgotPasswordFormData) => {
-    setSaving(true)
+    setSaving(true);
     try {
       const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: data.email }),
-      })
-      const result = await res.json()
+      });
+      const result = await res.json();
       if (!res.ok) {
-        toast.error(result.error || "Account not found")
-        return
+        toast.error(result.error || "Account not found");
+        return;
       }
-      setResetEmail(data.email)
-      setResetMode(true)
-      toast.success("Account found! Set your new password.")
+      setResetEmail(data.email);
+      setResetMode(true);
+      toast.success("Account found! Set your new password.");
     } catch {
-      toast.error("Something went wrong")
+      toast.error("Something went wrong");
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   const onResetSubmit = async (data: { password: string; confirmPassword: string }) => {
-    setSaving(true)
+    setSaving(true);
     try {
       const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: resetEmail, newPassword: data.password }),
-      })
-      const result = await res.json()
+      });
+      const result = await res.json();
       if (!res.ok) {
-        toast.error(result.error || "Failed to reset")
-        return
+        toast.error(result.error || "Failed to reset");
+        return;
       }
-      toast.success("Password updated! You can now sign in.")
-      window.location.href = "/login"
+      toast.success("Password updated! You can now sign in.");
+      window.location.href = "/login";
     } catch {
-      toast.error("Something went wrong")
+      toast.error("Something went wrong");
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
@@ -85,7 +95,7 @@ export default function ForgotPasswordPage() {
         <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
       </div>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative  z-[99]">
         <div className="text-center mb-8">
           <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20 mx-auto mb-4">
             <KeyRound className="h-6 w-6 text-white" />
@@ -105,7 +115,13 @@ export default function ForgotPasswordPage() {
                 {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
               </div>
               <Button type="submit" className="w-full" disabled={saving}>
-                {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...</> : "Find Account"}
+                {saving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...
+                  </>
+                ) : (
+                  "Find Account"
+                )}
               </Button>
             </form>
           ) : (
@@ -125,7 +141,13 @@ export default function ForgotPasswordPage() {
                 {resetErrors.confirmPassword && <p className="text-xs text-destructive">{resetErrors.confirmPassword.message}</p>}
               </div>
               <Button type="submit" className="w-full" disabled={saving}>
-                {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : "Update Password"}
+                {saving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...
+                  </>
+                ) : (
+                  "Update Password"
+                )}
               </Button>
             </form>
           )}
@@ -138,5 +160,5 @@ export default function ForgotPasswordPage() {
         </p>
       </div>
     </div>
-  )
+  );
 }
