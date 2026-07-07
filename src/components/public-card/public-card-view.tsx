@@ -403,7 +403,7 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
                 <QuickActionButton
                   icon={MapPin}
                   label="Map"
-                  href={`https://maps.google.com/?q=${encodeURIComponent(card.address)}`}
+                  href={card.business?.googleMapsLink ? ensureHttps(card.business.googleMapsLink) : `https://maps.google.com/?q=${encodeURIComponent(card.address)}`}
                   color="#ef4444"
                   isDark={isDark}
                 />
@@ -629,6 +629,21 @@ export default function PublicCardView({ card }: PublicCardViewProps) {
                 </h3>
               </div>
               <div className="space-y-3">
+                {card.address && (
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${pc}10` }}>
+                      <MapPin className="h-4 w-4" style={{ color: pc }} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider font-medium" style={{ color: txtMut }}>
+                        Address
+                      </p>
+                      <p className="text-sm" style={{ color: txt }}>
+                        {card.address}
+                      </p>
+                    </div>
+                  </div>
+                )}
                 {card.business.gst && (
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${pc}10` }}>
