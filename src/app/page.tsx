@@ -127,7 +127,7 @@ export default function Home() {
                 <CardTitle className="text-lg">Location</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Mumbai, Maharashtra, India</p>
+                <p className="text-sm text-muted-foreground">Nashik, Maharashtra, India</p>
               </CardContent>
             </Card>
           </div>
@@ -136,7 +136,9 @@ export default function Home() {
 
       <footer className="border-t py-6 px-6">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row max-w-5xl mx-auto">
-          <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Smart Visiting Card. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">
+            &copy; {new Date().getFullYear()} Smart Visiting Card | All rights reserved | Developed By Rakesh Singh
+          </p>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <Link href="#contact" className="hover:text-foreground transition-colors">
               Contact
