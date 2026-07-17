@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { getCurrentUser } from "@/services/auth-service"
-import { verifyPassword, hashPassword, updateUser } from "@/services/user-service"
+import { verifyPassword, updateUser } from "@/services/user-service"
 
 export async function POST(request: Request) {
   try {
@@ -33,8 +33,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const hashed = await hashPassword(newPassword)
-    await updateUser(user.id, { password: hashed })
+    await updateUser(user.id, { password: newPassword })
 
     return NextResponse.json({
       success: true,
